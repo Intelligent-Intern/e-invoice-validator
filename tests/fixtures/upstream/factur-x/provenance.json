@@ -1,0 +1,21 @@
+{
+  "source": "https://github.com/ZUGFeRD/mustangproject/tree/b0c60e456e63596b3ec3ac76e94374dc6e109c4f",
+  "files": {
+    "Factur-X_basic.xml": {
+      "sourcePath": "library/src/test/resources/cii/Factur-X_basic.xml",
+      "sha256": "b75c9744e76692d0d367c3832601685ac42b9e12d3c559d34c255b653168a5aa"
+    },
+    "factur-x-extended.xml": {
+      "sourcePath": "library/src/test/resources/factur-x-extended.xml",
+      "sha256": "a63bb55b739a5d23ba91cfcd4991c819df7e3058f12837c1da1d91c8ff757b50"
+    },
+    "factur-x.xml": {
+      "sourcePath": "library/src/test/resources/factur-x.xml",
+      "sha256": "b2c843bfec9ddd6c94a7827247ea9deebbc7095429755c52df3c0c0dba55edbc"
+    },
+    "attributeBasedXMP_zugferd_2p0_EN16931_Einfach.pdf": {
+      "sourcePath": "validator/src/test/resources/attributeBasedXMP_zugferd_2p0_EN16931_Einfach.pdf",
+      "sha256": "29842457f57143aba5da78fdf390aba773c965e60b1caab93dfff3e9d4c802f4"
+    }
+  }
+}

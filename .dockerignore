@@ -1,0 +1,16 @@
+# Only public library source, pinned rules and fixtures enter the image.
+**
+!Dockerfile
+!composer.json
+!LICENSE
+!THIRD_PARTY_NOTICES.md
+!src
+!src/**
+!bin
+!bin/**
+!rules
+!rules/**
+!tests
+!tests/**
+!examples
+!examples/**

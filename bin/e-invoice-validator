@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+$autoload = [__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'];
+foreach ($autoload as $path) if (is_file($path)) { require $path; break; }
+if (!class_exists(IntelligentIntern\EInvoiceValidator\Validator::class)) {
+    spl_autoload_register(static function (string $class): void {
+        $prefix = 'IntelligentIntern\\EInvoiceValidator\\';
+        if (str_starts_with($class, $prefix)) {
+            $file = __DIR__ . '/../src/' . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
+            if (is_file($file)) require $file;
+        }
+    });
+}
+$args = array_slice($argv, 1); $file = null; $profile = null; $pdf = false;
+foreach ($args as $arg) {
+    if ($arg === '--help' || $arg === '-h') {
+        fwrite(STDOUT, "Usage: e-invoice-validator [--json] [--extract-pdf] [--profile=ID] FILE\nExit codes: 0 valid XML scope, 1 invalid, 2 unsupported, 3 runtime/configuration error.\nPDF extraction does not certify PDF/A or visual consistency.\n"); exit(0);
+    }
+    if ($arg === '--json') continue;
+    if ($arg === '--extract-pdf') { $pdf = true; continue; }
+    if (str_starts_with($arg, '--profile=')) { $profile = substr($arg, 10); continue; }
+    if (str_starts_with($arg, '-') || $file !== null) { fwrite(STDERR, "Unexpected argument: $arg\n"); exit(3); }
+    $file = $arg;
+}
+if ($file === null) { fwrite(STDERR, "Usage: e-invoice-validator [--extract-pdf] FILE\n"); exit(3); }
+try {
+    $report = IntelligentIntern\EInvoiceValidator\Validator::fromBundledRules($pdf)->validateFile($file, $profile);
+    fwrite(STDOUT, $report->toJson() . "\n");
+    exit(match ($report->status) { 'valid' => 0, 'invalid' => 1, 'unsupported' => 2, default => 3 });
+} catch (Throwable $error) {
+    fwrite(STDERR, json_encode(['status' => 'error', 'message' => $error->getMessage()], JSON_UNESCAPED_SLASHES) . "\n"); exit(3);
+}
