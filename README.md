@@ -34,21 +34,14 @@ An ordinary PDF or photograph is not an XML invoice and is not OCR-processed.
 ## Install and runtime
 
 ```sh
-composer install
-```
-
-Until Packagist registration and a release tag, consumers can use the Git source:
-
-```sh
-composer config repositories.ii-validator vcs https://github.com/Intelligent-Intern/e-invoice-validator
 composer require intelligent-intern/e-invoice-validator:dev-main
 ```
 
 XML parsing needs PHP DOM/libxml. Actual Schematron validation additionally
 needs a King build exposing `King\XSLT\Processor` and a compatible SaxonC
 shared library. Missing runtime is reported as `error`, never as a valid invoice.
-In the local `ii-vendors` layout, King is the sibling `../king-ext` checkout; its isolated wrapper
-does not overwrite the system PHP installation:
+When building from source, set `KING_SOURCE` to your King checkout. Its isolated
+wrapper does not overwrite the system PHP installation:
 
 ```sh
 KING_SOURCE=/absolute/path/to/king-ext
@@ -150,8 +143,9 @@ when revalidating under a different release.
 ## Tests and deployment
 
 ```sh
+composer install
 composer test
-make test-native  # defaults to ../king-ext in the ii-vendors layout
+make test-native  # defaults to ../king-ext
 # Or: make test-native KING_SOURCE=/absolute/path/to/king-ext
 ```
 
@@ -165,15 +159,6 @@ permits local stylesheet resources; local-file confinement is still required.
 Only trusted, pinned rules may be executed. Do not expose arbitrary XSLT, paths
 or URL fetching to API clients. Bound memory, input size, parallelism and wall time
 at the worker boundary. Reports contain invoice data and must remain private.
-
-## Project status
-
-The initial implementation is published in its own Git repository and includes
-source for the tested native Docker image. In the local workspace it lives at
-`ii-vendors/e-invoice-validator`, alongside `king-ext` and `sepa-creator`.
-It is not connected to a consuming application's OCR/accounting workflow or deployed as a
-public validation endpoint. Packagist registration, release tags and publishing
-container images remain separate steps.
 
 ## PHP security requirements
 
