@@ -14,6 +14,12 @@ final class Xml
         if (preg_match('/<!DOCTYPE|<!ENTITY/i', $xml) === 1) {
             throw new \InvalidArgumentException('DTD and entity declarations are prohibited');
         }
+        if (preg_match('/<\?xml[^?]*encoding\s*=\s*[\'"]([^\'"]+)/i', $xml, $encoding) === 1
+            && strtoupper($encoding[1]) !== 'UTF-8') {
+            // ASCII-only encodings such as UTF-7 can otherwise conceal markup
+            // from the declaration guard before libxml transcodes the input.
+            throw new \InvalidArgumentException('Only UTF-8 XML encoding is supported');
+        }
         $previous = libxml_use_internal_errors(true);
         $previousLoader = libxml_get_external_entity_loader();
         libxml_set_external_entity_loader(static fn () => null);

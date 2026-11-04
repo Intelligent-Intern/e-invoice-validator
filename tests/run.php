@@ -29,6 +29,8 @@ check($validator->validateString($utf16)->status === 'invalid', 'UTF-16 DTD must
 $previousErrors = libxml_use_internal_errors(true);
 libxml_clear_errors();
 foreach ([$xxe, '<!DOCTYPE Invoice [<!ENTITY % bad "<!ENTITY"> %bad;]><Invoice/>', $utf16,
+          '<?xml version="1.0" encoding="UTF-7"?>+ADw-+ACE-DOCTYPE Invoice+AD4-+ADw-Invoice/+AD4-',
+          '<?xml version="1.0" encoding="ISO-8859-1"?><Invoice/>',
           "<Invoice>\x00</Invoice>", "<Invoice>\xff</Invoice>"] as $prohibited) {
     try { Xml::parse($prohibited); check(false, 'prohibited input must fail before libxml'); }
     catch (InvalidArgumentException $expected) {
