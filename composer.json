@@ -3,9 +3,43 @@
   "description": "Native PHP electronic invoice validation with King and SaxonC, without a Java runtime.",
   "type": "library",
   "license": "MIT",
-  "require": {"php": "^8.2", "ext-dom": "*", "ext-libxml": "*", "ext-json": "*"},
-  "suggest": {"ext-king": "Required for real Schematron validation with native SaxonC"},
-  "autoload": {"psr-4": {"IntelligentIntern\\EInvoiceValidator\\": "src/"}},
-  "bin": ["bin/e-invoice-validator"],
-  "scripts": {"test": "php tests/run.php"}
+  "require": {
+    "php": "^8.2",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-json": "*"
+  },
+  "suggest": {
+    "ext-king": "Required for real Schematron validation with native SaxonC"
+  },
+  "autoload": {
+    "psr-4": {
+      "IntelligentIntern\\EInvoiceValidator\\": "src/"
+    }
+  },
+  "bin": [
+    "bin/e-invoice-validator"
+  ],
+  "scripts": {
+    "test": "php tests/run.php"
+  },
+  "homepage": "https://github.com/Intelligent-Intern/e-invoice-validator",
+  "support": {
+    "issues": "https://github.com/Intelligent-Intern/e-invoice-validator/issues",
+    "source": "https://github.com/Intelligent-Intern/e-invoice-validator"
+  },
+  "archive": {
+    "exclude": [
+      "/tests",
+      "/.github",
+      "/.cache",
+      "/artifacts",
+      "/vendor",
+      "/composer.lock",
+      "/.env",
+      "/.env.*",
+      "/dist",
+      "/*.log"
+    ]
+  }
 }

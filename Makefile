@@ -1,7 +1,7 @@
 PHP ?= php
 IMAGE ?= e-invoice-validator:local
 CONTAINER_TIMEOUT ?= 180
-KING_SOURCE ?= $(abspath ../../../king-ext)
+KING_SOURCE ?= $(abspath ../king-ext)
 DOCKER_LIMITS = --network none --read-only --cap-drop ALL --security-opt no-new-privileges --memory 768m --cpus 2 --pids-limit 128 --tmpfs /tmp:rw,noexec,nosuid,size=128m,mode=1777
 
 .PHONY: test test-native image test-container lint

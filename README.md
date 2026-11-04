@@ -37,10 +37,17 @@ An ordinary PDF or photograph is not an XML invoice and is not OCR-processed.
 composer install
 ```
 
+Until Packagist registration and a release tag, consumers can use the Git source:
+
+```sh
+composer config repositories.ii-validator vcs https://github.com/Intelligent-Intern/e-invoice-validator
+composer require intelligent-intern/e-invoice-validator:dev-main
+```
+
 XML parsing needs PHP DOM/libxml. Actual Schematron validation additionally
 needs a King build exposing `King\XSLT\Processor` and a compatible SaxonC
 shared library. Missing runtime is reported as `error`, never as a valid invoice.
-The source is available in the sibling King checkout; its isolated wrapper
+In the local `ii-vendors` layout, King is the sibling `../king-ext` checkout; its isolated wrapper
 does not overwrite the system PHP installation:
 
 ```sh
@@ -144,7 +151,8 @@ when revalidating under a different release.
 
 ```sh
 composer test
-make test-native KING_SOURCE=/absolute/path/to/king-ext
+make test-native  # defaults to ../king-ext in the ii-vendors layout
+# Or: make test-native KING_SOURCE=/absolute/path/to/king-ext
 ```
 
 The normal test command reports a missing native runtime as a skipped integration
@@ -160,7 +168,9 @@ at the worker boundary. Reports contain invoice data and must remain private.
 
 ## Project status
 
-This is the initial local implementation, including the tested native Docker
-image. It is not connected to Allinvoice's OCR/accounting workflow or deployed
-as a public validation endpoint. Publishing remains a separate step. Repository
-creation does not publish this checkout's contents.
+The initial implementation is published in its own Git repository and includes
+source for the tested native Docker image. In the local workspace it lives at
+`ii-vendors/e-invoice-validator`, alongside `king-ext` and `sepa-creator`.
+It is not connected to Allinvoice's OCR/accounting workflow or deployed as a
+public validation endpoint. Packagist registration, release tags and publishing
+container images remain separate steps.
