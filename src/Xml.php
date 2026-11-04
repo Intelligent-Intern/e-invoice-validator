@@ -6,6 +6,14 @@ final class Xml
 {
     public static function parse(string $xml): \DOMDocument
     {
+        // Reject prohibited encodings and declarations before entering libxml.
+        // A post-parse doctype check is too late for native DTD parser defects.
+        if (str_contains($xml, "\0") || preg_match('//u', $xml) !== 1) {
+            throw new \InvalidArgumentException('XML must be UTF-8 without NUL bytes');
+        }
+        if (preg_match('/<!DOCTYPE|<!ENTITY/i', $xml) === 1) {
+            throw new \InvalidArgumentException('DTD and entity declarations are prohibited');
+        }
         $previous = libxml_use_internal_errors(true);
         $previousLoader = libxml_get_external_entity_loader();
         libxml_set_external_entity_loader(static fn () => null);

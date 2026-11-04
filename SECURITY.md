@@ -45,3 +45,22 @@ package rebuild. The provided Docker runtime is Linux.
 Keep applying subsequent security updates. These checks address the named
 advisories and do not certify absence of other vulnerabilities. Library updates
 do not upgrade the developer host or a consuming application's PHP server.
+
+## Container dependency hardening (2026-11-04)
+
+The default runtime uses the pinned PHP 8.4.27 Debian 13 (trixie) image.
+Security updates are applied during the build and PHP compilation tools and
+headers are removed from the final runtime. This replaces the Debian 12 SQLite
+version affected by CVE-2025-7458 and reduces unused build-time components.
+Runtime source scans and full image scans remain separate checks.
+
+Debian still lists CVE-2026-6653 in its stable libxml2 package. Invoice XML must
+be UTF-8 without NUL bytes and DTD/entity declarations are rejected **before**
+calling libxml, so prohibited DTD input does not reach its internal-subset parser.
+This is an application mitigation, not a claim that libxml itself was patched.
+Raw vulnerability reports must retain this finding until the distribution fixes
+it or an artifact-specific applicability assessment establishes non-exposure.
+
+References: [SQLite](https://security-tracker.debian.org/tracker/CVE-2025-7458),
+[libxml2](https://security-tracker.debian.org/tracker/CVE-2026-6653),
+[zlib/MiniZip applicability](https://security-tracker.debian.org/tracker/CVE-2023-45853).

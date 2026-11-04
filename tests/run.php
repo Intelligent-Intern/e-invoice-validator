@@ -26,6 +26,18 @@ check($unsafe->status === 'invalid' && in_array('XML_PARSE', codes($unsafe), tru
 check(!str_contains($unsafe->toJson(), 'root:x:'), 'entity content must never leak');
 $utf16 = "\xff\xfe" . implode("\0", str_split('<?xml version="1.0" encoding="UTF-16"?>' . $xxe)) . "\0";
 check($validator->validateString($utf16)->status === 'invalid', 'UTF-16 DTD must also be rejected');
+$previousErrors = libxml_use_internal_errors(true);
+libxml_clear_errors();
+foreach ([$xxe, '<!DOCTYPE Invoice [<!ENTITY % bad "<!ENTITY"> %bad;]><Invoice/>', $utf16,
+          "<Invoice>\x00</Invoice>", "<Invoice>\xff</Invoice>"] as $prohibited) {
+    try { Xml::parse($prohibited); check(false, 'prohibited input must fail before libxml'); }
+    catch (InvalidArgumentException $expected) {
+        check(count(libxml_get_errors()) === 0, 'prohibited input must never enter the native XML parser');
+    }
+}
+libxml_use_internal_errors($previousErrors);
+check(Xml::parse("\xef\xbb\xbf<Invoice>Grüße &amp; Gebühren</Invoice>")->documentElement->textContent === 'Grüße & Gebühren',
+    'UTF-8 BOM, Unicode invoice text and predefined XML entities remain supported');
 check($validator->validateString('<Invoice xmlns="urn:evil"/>')->status === 'unsupported', 'unrecognised namespace must not pass');
 check($validator->validateString(str_replace('xrechnung_3.0', 'xrechnung_99.0', $fixture))->status === 'unsupported', 'unsupported guideline must not inherit newer or older rules');
 check($validator->validateString($fixture, 'missing-profile')->status === 'unsupported', 'explicit profile must match actual guideline');
