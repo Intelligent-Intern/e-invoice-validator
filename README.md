@@ -5,7 +5,7 @@ King/SaxonC runtime for Schematron. XSD validation and business-rule findings
 are combined into a versioned JSON report. No Java process or remote validation
 API is used.
 
-Package: `intelligent-intern/e-invoice-validator` · PHP 8.2+ · MIT for library code.
+Package: `intelligent-intern/e-invoice-validator` · PHP 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12 or newer patches in those branches · MIT for library code.
 Bundled third-party resources retain their own licenses and notices.
 
 ## Supported checks
@@ -174,3 +174,12 @@ source for the tested native Docker image. In the local workspace it lives at
 It is not connected to Allinvoice's OCR/accounting workflow or deployed as a
 public validation endpoint. Packagist registration, release tags and publishing
 container images remain separate steps.
+
+## PHP security requirements
+
+See [SECURITY.md](SECURITY.md) for patched branch minimums and the required
+pre-request `session.upload_progress.enabled=0` setting. Composer and a runtime
+guard reject older PHP even when dependencies are copied from another machine.
+`make check-runtime` checks the actual interpreter and upload-progress setting.
+The Docker image includes this configuration. Use the container tests if the
+host PHP is older or lacks the required startup configuration.
