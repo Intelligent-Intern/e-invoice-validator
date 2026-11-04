@@ -2,7 +2,7 @@
 # Build from a clean local King commit, never uploading/pushing a repository.
 set -euo pipefail
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-king_source="${KING_SOURCE:-$(cd "$project_dir/../../.." && pwd)/king-ext}"
+king_source="${KING_SOURCE:-$(cd "$project_dir/.." && pwd)/king-ext}"
 image_name="${IMAGE:-e-invoice-validator:local}"
 if [[ ! -d "$king_source/.git" && ! -f "$king_source/.git" ]]; then
     echo 'KING_SOURCE must identify the local king-ext Git checkout.' >&2
