@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-ARG PHP_IMAGE=php:8.4-cli-bookworm@sha256:54b467ede1db96c66675e7b78457dd43729d0e7be31978d4a1e5c069ceabcf76
+ARG PHP_IMAGE=php:8.4.27-cli-bookworm@sha256:54b467ede1db96c66675e7b78457dd43729d0e7be31978d4a1e5c069ceabcf76
 FROM composer:2@sha256:5190d9b445add2fa26090108273cb1ef1e1af98175201c737b85b3c4f90fbf7c AS composer_binary
 
 FROM ${PHP_IMAGE} AS native_build
@@ -45,12 +45,15 @@ ENV KING_SAXONC_LIBRARY=/opt/saxonc/libsaxonc-core-he.so \
     HOME=/tmp TMPDIR=/tmp
 WORKDIR /opt/validator
 COPY --from=application_build /opt/validator/vendor ./vendor/
-COPY composer.json LICENSE THIRD_PARTY_NOTICES.md ./
+COPY composer.json SECURITY.md LICENSE THIRD_PARTY_NOTICES.md ./
+COPY docker/php-security.ini /usr/local/etc/php/conf.d/zz-security.ini
+COPY tools/check-runtime.php ./tools/check-runtime.php
 COPY src/ ./src/
 COPY bin/ ./bin/
 COPY rules/ ./rules/
 COPY tests/ ./tests/
 COPY examples/ ./examples/
+RUN php tools/check-runtime.php
 USER 10001:10001
 ENTRYPOINT ["php", "/opt/validator/bin/e-invoice-validator"]
 CMD ["--help"]

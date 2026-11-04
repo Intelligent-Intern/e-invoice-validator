@@ -14,3 +14,9 @@
 !tests/**
 !examples
 !examples/**
+
+!docker
+!docker/**
+!tools
+!tools/check-runtime.php
+!SECURITY.md

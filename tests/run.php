@@ -12,6 +12,7 @@ function check(bool $condition, string $message): void {
     if (!$condition) throw new RuntimeException('FAIL: ' . $message);
 }
 function codes($report): array { return array_map(static fn(Finding $f): string => $f->code, $report->findings); }
+require __DIR__.'/runtime-policy.php';
 $validator = Validator::fromBundledRules();
 $fixtureRoot = __DIR__ . '/fixtures/upstream/xrechnung/instances/standard';
 $fixture = file_get_contents($fixtureRoot . '/01.01a-INVOICE_ubl.xml');

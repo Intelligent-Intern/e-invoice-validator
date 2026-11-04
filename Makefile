@@ -6,10 +6,13 @@ DOCKER_LIMITS = --network none --read-only --cap-drop ALL --security-opt no-new-
 
 .PHONY: test test-native image test-container lint
 
-test:
+check-runtime:
+	$(PHP) tools/check-runtime.php
+
+test: check-runtime
 	$(PHP) tests/run.php
 
-test-native:
+test-native: check-runtime
 	REQUIRE_KING=1 "$(KING_SOURCE)/bin/king-xslt-php" tests/run.php
 
 image:
@@ -21,3 +24,5 @@ test-container:
 lint:
 	find src bin tests examples -type f \( -name '*.php' -o -name e-invoice-validator \) -exec $(PHP) -l {} \;
 	bash -n tools/build-runtime.sh
+
+.PHONY: check-runtime

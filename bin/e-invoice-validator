@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 declare(strict_types=1);
+try {
 $autoload = [__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'];
 foreach ($autoload as $path) if (is_file($path)) { require $path; break; }
 if (!class_exists(IntelligentIntern\EInvoiceValidator\Validator::class)) {
@@ -11,6 +12,12 @@ if (!class_exists(IntelligentIntern\EInvoiceValidator\Validator::class)) {
             if (is_file($file)) require $file;
         }
     });
+}
+} catch (Throwable $error) {
+    fwrite(STDERR,json_encode(['status'=>'error','message'=>$error->getMessage()])."\n");exit(3);
+}
+try { require_once dirname(__DIR__).'/src/bootstrap.php'; } catch (Throwable $error) {
+    fwrite(STDERR,json_encode(['status'=>'error','message'=>$error->getMessage()])."\n"); exit(3);
 }
 $args = array_slice($argv, 1); $file = null; $profile = null; $pdf = false;
 foreach ($args as $arg) {
